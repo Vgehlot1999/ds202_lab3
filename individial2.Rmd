@@ -1,0 +1,119 @@
+---
+title: "individual1.Rmd"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(knitr)
+library(tidyverse)
+library(readxl)
+dat <- readxl::read_xls('GSS.xls')
+```
+
+```{r}
+dat<- dat%>%
+  rename(`yr`=`Gss year for this respondent`, `id`= `Respondent id number`,
+         `mstatus` = `Marital status`,
+         `nsibs`= `Number of brothers and sisters`,
+         `scomplete` = `Highest year of school completed`,
+         `sex` = `Respondents sex`, `pol_aff` = `Political party affiliation`,
+         `happy` = `General happiness`, `ballot` = `Ballot used for interview`)
+
+dat
+
+```
+
+
+#Question 1
+
+Find the average years of education for the respondents with each marital status. Arrange your output in a meaningful order and print. Describe any patterns you find.
+
+
+```{r}
+dat %>%
+  mutate(aveedu= as.numeric(scomplete)) %>%
+  na.omit%>%
+  group_by(mstatus) %>%
+  summarize(aveedu = mean(aveedu))
+  
+```
+It is hard to define a specific pattern for the given data. Just by looking at the summary table, we can see that the group of 'never married' has the highest mean years of education compared to "divorced" or "married" group. However, it is hard to generalize the consequences between these variable since there is a group of "no answer". The outcome will change if those group of "no answer" replies back. Hence, it is difficult for us to conclude that marital status affects the average years of education for the respondents. 
+
+#Question 2
+
+Create a single data frame containing records for the better educated respondents with each marital status. A “better educated” respondent is someone who has strictly more years of education than the average among those with the same marital status. Print the structure of the data frame.
+```{r}
+nans <- data.frame(dat[dat$mstatus %in% c('No answer'), ])
+nans<- na.omit(nans)
+avg_nans <- mean(nans$scomplete)
+fnans <- nans[!nans$scomplete < avg_nans, ]
+
+div <- data.frame(dat[dat$mstatus %in% c('Divorced'), ])
+div<- na.omit(div)
+avg_div <- mean(div$scomplete)
+fdiv <- div[!div$scomplete < avg_div, ]
+
+mar <- data.frame(dat[dat$mstatus %in% c('Married'), ])
+mar<- na.omit(mar)
+avg_mar <- mean(mar$scomplete)
+fmar <- mar[!mar$scomplete < avg_mar, ]
+
+nmar <- data.frame(dat[dat$mstatus %in% c('Never married'), ])
+nmar<- na.omit(nmar)
+avg_nmar <- mean(nmar$scomplete)
+fnmar <- nmar[!nmar$scomplete < avg_nmar, ]
+
+wid <- data.frame(dat[dat$mstatus %in% c('Widowed'), ])
+wid<- na.omit(wid)
+avg_wid <- mean(wid$scomplete)
+fwid <- wid[!wid$scomplete < avg_wid, ]
+
+
+sep <- data.frame(dat[dat$mstatus %in% c('Separated'), ])
+sep<- na.omit(sep)
+avg_sep <- mean(sep$scomplete)
+fsep <- sep[!sep$scomplete < avg_sep, ]
+
+df<- rbind(fdiv,fmar,fnmar,fnans,fsep,fwid)
+df
+```
+
+#Question 3 
+
+How is the happiness of a respondent related to his/her marriage status? Define that a person is happy if the response to question is “Very happy” or “Pretty happy”.
+
+```{r}
+happy1 <- filter(dat, happy == "Pretty happy" | happy == "Very Happy")
+ggplot(happy1, aes(x = mstatus)) + geom_histogram(stat = "count")
+summary(happy1)
+
+```
+
+
+#Question 4  
+
+Does party affiliation affect the relationship you found in the last question?
+
+
+
+#Question 5 
+
+How is marital status related to the education of a respondent? What are possible reasons accounting for the patterns you see?
+
+
+```{r}
+ggplot(dat, aes(x=mstatus))+ 
+  geom_bar() +
+  facet_wrap(~ `scomplete`)+
+  coord_flip()
+
+```
+It is quite interesting that there exists a pattern for the years of education through the groups by marital status. As we can see, group of married tends have more frequencies than the never married group. So, the education frequencies goes by group married > never married > divorced > widowed. There are not much of data of groups of separated, so it is hard to tell the relationship between the level of education and it. 
+Looking at the facet wrap, we can conclude that the more educated the person is, the better his/her marriage life is. 
+
+
+
