@@ -1,0 +1,163 @@
+---
+title: "Team.rmd"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+install.packages('readxl')
+data <- readxl::read_excel('/Users/visma/Desktop/DS202/ds202_lab3/GSS.xls')
+data
+```
+
+```{r}
+
+```
+
+#Question 1
+
+Find the average years of education for the respondents with each marital status. Arrange your output in a meaningful order and print. Describe any patterns you find.
+
+
+```{r}
+years <- as.numeric(data$`Highest year of school completed`)
+data$years <- years
+var1 <- data %>%
+  group_by(`Marital status`) %>%
+    summarize(AvgYr = mean(years, na.rm = TRUE)) %>%
+      arrange(AvgYr)
+
+var1
+ggplot(data = var1, aes(x = AvgYr, y = `Marital status`)) + geom_bar(stat="identity")
+
+```
+It is hard to define a specific pattern for the given data. Just by looking at the summary table, we can see that the group of 'never married' has the highest mean years of education compared to "divorced" or "married" group. However, it is hard to generalize the consequences between these variable since there is a group of "no answer". The outcome will change if those group of "no answer" replies back. Hence, it is difficult for us to conclude that marital status affects the average years of education for the respondents. 
+
+
+Question 2
+
+```{r}
+##For No Answer
+nAns <- data.frame(data[data$`Marital status` %in% c('No answer'), ])
+nAns<- na.omit(nAns)
+AvgNAns <- mean(nAns$years)
+FNAns <- nAns[!nAns$years < AvgNAns, ]
+
+##For Never Married
+nm <- data.frame(data[data$`Marital status` %in% c('Never married'), ])
+nm<- na.omit(nm)
+AvgNM <- mean(nm$years)
+FNM <- nm[!nm$years < AvgNM, ]
+
+##For Divorced
+d <- data.frame(data[data$`Marital status` %in% c('Divorced'), ])
+d<- na.omit(d)
+AvgD <- mean(d$years)
+FD <- d[!d$years < AvgD, ]
+
+##For Married
+m <- data.frame(data[data$`Marital status` %in% c('Married'), ])
+m<- na.omit(m)
+AvgM <- mean(m$years)
+FM <- m[!m$years < AvgM, ]
+
+##For Separated
+s <- data.frame(data[data$`Marital status` %in% c('Separated'), ])
+s<- na.omit(s)
+AvgS <- mean(s$years)
+FS <- s[!s$years < AvgS, ]
+
+##For Widowed
+w <- data.frame(data[data$`Marital status` %in% c('Widowed'), ])
+w<- na.omit(w)
+AvgW <- mean(w$years)
+FW <- w[!w$years < AvgW, ]
+
+FinalDF <- rbind(FNAns, FNM, FD, FM, FS, FW)
+FinalDF
+```
+
+Question 3
+```{r}
+happy <- filter(data, `General happiness` == "Pretty happy" | `General happiness` == "Very Happy")
+ggplot(happy, aes(x = `Marital status`)) + geom_histogram(stat = "count")
+
+data %>% 
+  select(`General happiness`, `Marital status`) %>%
+    group_by(`Marital status`) %>%
+      count(`General happiness`)
+```
+
+We can see from the graphs above that people who are married tend to be happier than people who are widowed or those with failed relationships. The second happiest people are those who never married, followed by those that are divorced. The least happiest people are the ones who are separated.
+
+
+Question 4
+
+```{r}
+ggplot(data, aes(x = `Marital status`)) + geom_bar() + facet_wrap(~`Political party affiliation`) + coord_flip()
+
+df <- data %>%
+  select(`General happiness`, `Political party affiliation`, `Marital status`) %>%
+    group_by(`Political party affiliation`, `Marital status`) %>%
+      count(`General happiness`)
+
+df
+```
+
+From the above we can see that political affiliation doesn't affect the relationship found in question three. This is because the distribution of happy couples is relatively proportional across all party affiliations. In every party, married couples are the happiest by far, and separated are the least.
+
+
+#Question 5 
+
+How is marital status related to the education of a respondent? What are possible reasons accounting for the patterns you see?
+
+
+```{r}
+ggplot(data, aes(x=`Marital status`))+ 
+  geom_bar() +
+  facet_wrap(~ `Highest year of school completed`)+
+  coord_flip()
+
+```
+It is quite interesting that there exists a pattern for the years of education through the groups by marital status. As we can see, group of married tends have more frequencies than the never married group. So, the education frequencies goes by group married > never married > divorced > widowed. There are not much of data of groups of separated, so it is hard to tell the relationship between the level of education and it. 
+Looking at the facet wrap, we can conclude that the more educated the person is, the better his/her marriage life is. 
+
+
+Question 6
+
+For this question, I will analyze the sex of a respondent in correlation with their overall happiness.
+
+```{r}
+happy <- filter(data, `General happiness` == "Pretty happy" | `General happiness` == "Very Happy")
+ggplot(happy, aes(x = `Respondents sex`)) + geom_histogram(stat = "count")
+
+data %>% 
+  select(`General happiness`, `Respondents sex`) %>%
+    group_by(`Respondents sex`) %>%
+      count(`General happiness`)
+```
+
+From all the respondents overall, it is clear to see that females overall are happier than their male counterparts. This is interesting to see, and there are many possible reasons that this is the case.
+
+Question 6 pt. 2
+
+
+I would like to explore whether political party affiliation will affect our findings above. 
+
+```{r}
+ggplot(data, aes(x = `Respondents sex`)) + geom_bar() + facet_wrap(~`Political party affiliation`) + coord_flip()
+
+df <- data %>%
+  select(`General happiness`, `Political party affiliation`, `Respondents sex`) %>%
+    group_by(`Political party affiliation`, `Respondents sex`) %>%
+      count(`General happiness`)
+
+df
+```
+
+I'd say that this has rather interesting results. Overall, females are still happier than their male counterparts in every political affiliation except for the "other party" category. In this affiliation, males are actually happier than females. This is the same case with the "independent, near republican" zone. The largest gap between happiness of each gender was on the left-leaning peoples' where women tneded to be happier than men by a significant margin.

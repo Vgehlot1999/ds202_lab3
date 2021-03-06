@@ -105,4 +105,3 @@ df
 ```
 
 From the above we can see that political affiliation doesn't affect the relationship found in question three. This is because the distribution of happy couples is relatively proportional across all party affiliations. In every party, married couples are the happiest by far, and separated are the least.
-
