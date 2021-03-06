@@ -43,6 +43,8 @@ dat %>%
 ```
 It is hard to define a specific pattern for the given data. Just by looking at the summary table, we can see that the group of 'never married' has the highest mean years of education compared to "divorced" or "married" group. However, it is hard to generalize the consequences between these variable since there is a group of "no answer". The outcome will change if those group of "no answer" replies back. Hence, it is difficult for us to conclude that marital status affects the average years of education for the respondents. 
 
+#Analysis from Vismay: I agree with this answer and it is similar to what I interpreted from the data as well!
+
 #Question 2
 
 Create a single data frame containing records for the better educated respondents with each marital status. A “better educated” respondent is someone who has strictly more years of education than the average among those with the same marital status. Print the structure of the data frame.
@@ -115,5 +117,6 @@ ggplot(dat, aes(x=mstatus))+
 It is quite interesting that there exists a pattern for the years of education through the groups by marital status. As we can see, group of married tends have more frequencies than the never married group. So, the education frequencies goes by group married > never married > divorced > widowed. There are not much of data of groups of separated, so it is hard to tell the relationship between the level of education and it. 
 Looking at the facet wrap, we can conclude that the more educated the person is, the better his/her marriage life is. 
 
+#Good idea using the facet wrap! It's easy to see the data in such a simple form and it really helps us make quick deductions.
 
 
