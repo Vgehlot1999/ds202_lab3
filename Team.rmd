@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(dplyr)
 library(ggplot2)
-install.packages('readxl')
+install.packages('readxl', repos = "http://cran.us.r-project.org")
 data <- readxl::read_excel('/Users/visma/Desktop/DS202/ds202_lab3/GSS.xls')
 data
 ```
