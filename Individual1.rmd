@@ -30,7 +30,9 @@ ggplot(data = var1, aes(x = AvgYr, y = `Marital status`)) + geom_bar(stat="ident
 
 ```
 
-There are no explicit patterns discernible from the data, but it can be claimed that people who never married had on average more years of education that people who did marry , regardless of how the relationship ended.
+There are no explicit patterns discernible from the data, but it can be claimed that people who never married had on average more years of education that people who did marry , regardless of how the relationship ended. 
+#comment from Hyunwoo: He had got the pretty same interpretation as I did. For me, I had looked into the group "no answer", however he had looked into more of never married. It was refreshing to look into my teammate's point of view.
+
 
 
 Question 2
@@ -75,7 +77,7 @@ FW <- w[!w$years < AvgW, ]
 FinalDF <- rbind(FNAns, FNM, FD, FM, FS, FW)
 FinalDF
 ```
-
+#comment from HyunWoo: He did great job binding all the better educated people into one column. Wish I had known a better code for this question, in that way me and him did not have to go through all these hard works. 
 
 Question 3
 ```{r}
@@ -90,6 +92,7 @@ data %>%
 
 We can see from the graphs above that people who are married tend to be happier than people who are widowed or those with failed relationships. The second happiest people are those who never married, followed by those that are divorced. The least happiest people are the ones who are separated.
 
+#Comment from HyunWoo: The interpretation and the plot was nice and neat. Was easy to find out the correlation between the happinness and the groups. 
 
 Question 4
 
@@ -106,3 +109,4 @@ df
 
 From the above we can see that political affiliation doesn't affect the relationship found in question three. This is because the distribution of happy couples is relatively proportional across all party affiliations. In every party, married couples are the happiest by far, and separated are the least.
 
+#Comment from HyunWoo: Interpretation was fine, however it would have been better with little more explanations towards another reason. 
